@@ -1,53 +1,70 @@
-import { Request, Response } from 'express';
-import { User } from '../models/User';
+import { Request, Response } from "express";
+import { User } from "../models/User";
+import JWT from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const ping = (req: Request, res: Response) => {
-    res.json({pong: true});
+    res.json({pong: true})
 }
 
 export const register = async (req: Request, res: Response) => {
-    if(req.body.email && req.body.password) {
-        let { email, password } = req.body;
+    
+    if(req.body.email && req.body.password){
 
-        let hasUser = await User.findOne({where: { email }});
-        if(!hasUser) {
-            let newUser = await User.create({ email, password });
+        let {email, password} = req.body
 
-            res.status(201);
-            res.json({ id: newUser.id });
-        } else {
-            res.json({ error: 'E-mail já existe.' });
-        }
-    }
+       let hasUser = await User.findOne({where:{email}})
 
-    res.json({ error: 'E-mail e/ou senha não enviados.' });
+       if(!hasUser){
+         
+            let newUser = await User.create({email,password})
+            let token = JWT.sign({id: newUser.id, email: newUser.email},process.env.JWT_SECRET_KEY as string, {expiresIn: '2h'})
+            res.json({id: newUser.id, token})
+
+            return;
+           
+       } else {
+        res.json({error: 'Usuario já cadastrado'})
+        return
+       }
+    } 
+        res.json({error: 'E-mail e/ou senha não enviados'})
+        return
+    
 }
 
 export const login = async (req: Request, res: Response) => {
-    if(req.body.email && req.body.password) {
-        let email: string = req.body.email;
-        let password: string = req.body.password;
+    
+    if(req.body.email && req.body.password){
 
-        let user = await User.findOne({ 
-            where: { email, password }
-        });
+        let {email, password} = req.body
 
-        if(user) {
-            res.json({ status: true });
+       let user = await User.findOne({where:{email, password}})
+
+       if(user){
+        let token = JWT.sign({id: user.id, email: user.email},process.env.JWT_SECRET_KEY as string, {expiresIn: '2h'})
+            res.json({status: true, user, token})
+
             return;
-        }
-    }
-
-    res.json({ status: false });
+           
+       } else {
+        res.json({error: 'Usuario já cadastrado'})
+        return
+       }
+    } 
+        res.json({error: 'E-mail e/ou senha não enviados'})
+        return
+    
 }
 
 export const list = async (req: Request, res: Response) => {
-    let users = await User.findAll();
-    let list: string[] = [];
+    let users = await User.findAll()
+    let list: string[] = []
 
-    for(let i in users) {
-        list.push( users[i].email );
+    for(let i in users){
+        list.push(users[i].email)
     }
-
-    res.json({ list });
+    res.json({list})
 }

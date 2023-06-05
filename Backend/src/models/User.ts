@@ -1,26 +1,25 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../instances/pg';
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../instances/mysql";
 
-export interface UserInstance extends Model {
+interface UserType extends Model {
     id: number;
     email: string;
     password: string;
 }
 
-export const User = sequelize.define<UserInstance>('User', {
+export const User = sequelize.define<UserType>('User',{
     id: {
+        type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        type: DataTypes.INTEGER
     },
     email: {
-        type: DataTypes.STRING,
-        unique: true
+        type: DataTypes.STRING
     },
     password: {
         type: DataTypes.STRING
     }
-}, {
+},{
     tableName: 'users',
     timestamps: false
-});
+})
