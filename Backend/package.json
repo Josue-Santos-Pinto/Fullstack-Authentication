@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
-    "start-dev": "nodemon src/server.ts"
+    "start-dev": "nodemon src/server.ts",
+    "build": "tsup src",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +24,8 @@
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
-    "sequelize": "^6.32.0"
+    "sequelize": "^6.32.0",
+    "tsup": "^6.7.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
