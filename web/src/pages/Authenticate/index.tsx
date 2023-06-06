@@ -8,9 +8,10 @@ import {
     NewUserArea, 
     NewUserText,
     NewUserButton,
-    MainForm,
+    MainFormArea,
     MainFormTitle,
     MainFormSubTitle,
+    MainForm,
     InputArea,
     InputValue,
     Label,
@@ -44,6 +45,8 @@ type CreateUserFormData = z.infer<typeof createUserFormSchema>
 function Authenticate (){
 
     const[output, setOutput] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserFormData>({
         resolver: zodResolver(createUserFormSchema)
@@ -65,26 +68,38 @@ function Authenticate (){
                         <NewUserButton>Criar Conta</NewUserButton>
                     </NewUserArea>
                 </HeaderForm>
-                <MainForm>
+                <MainFormArea>
                     <MainFormTitle>Bem vindo</MainFormTitle>
                     <MainFormSubTitle>Faça login para acessar nosso site</MainFormSubTitle>
-                    <form onSubmit={handleSubmit(createUser)}>
-                    <InputArea>
-                        <Label>Email</Label>
-                        <InputValue type='text' {...register('email')} placeholder='exemplo@gmail.com' hasError={errors.email?.message ? true : false} />
+                    <MainForm onSubmit={handleSubmit(createUser)} action=''>
+                        <InputArea hasError={errors.email?.message ? true : false}>
+                            <InputValue 
+                                type='text' 
+                                {...register('email')} 
+                                value={email} 
+                                onChange={(e)=>setEmail(e.target.value)}  
+                                 
+                            />
+                            <Label shrink={email !== ''}>Email</Label>
+                        </InputArea>
                         {errors.email && <ErrorSpan>{errors.email.message}</ErrorSpan>}
-                    </InputArea>
 
-                    <InputArea>
-                        <Label>Senha</Label>
-                        <InputValue type='password' {...register('password')} placeholder='password123' hasError={errors.password?.message ? true : false} />
+                        <InputArea hasError={errors.password?.message ? true : false}>
+                            <InputValue 
+                                type='password' 
+                                {...register('password')}  
+                                value={password} 
+                                onChange={(e)=>setPassword(e.target.value)}
+                                 
+                            />
+                            <Label shrink={password !== ''}>Senha</Label>
+                        </InputArea>
                         {errors.password && <ErrorSpan>{errors.password.message}</ErrorSpan>}
-                    </InputArea>
-                        
-                    <SubmitButton type='submit'>Login</SubmitButton>
-                    </form>
+                            
+                        <SubmitButton type='submit'>Login</SubmitButton>
+                    </MainForm>
                     <pre>{output}</pre>
-                </MainForm>
+                </MainFormArea>
             </FormArea>
             <ImageArea>
                 <Image src={houseIMG}  />

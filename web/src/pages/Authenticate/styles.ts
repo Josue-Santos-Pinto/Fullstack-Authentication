@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 type labelProps = {
-    hasError?: boolean | null
+    hasError?: boolean | null;
+    shrink?: boolean
 }
 
 export const Container = styled.div`
@@ -60,7 +61,7 @@ export const NewUserButton = styled.div`
     padding: 0 10px;
     margin-left: 10px;
 `
-export const MainForm = styled.div`
+export const MainFormArea = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -77,32 +78,67 @@ export const MainFormSubTitle = styled.h1`
     color: #aaacab;
     line-height: 5px;
 `
-export const InputArea = styled.div`
-    margin-top: 25px;
+export const MainForm = styled.form`
+    position: relative;
+    width: 400px;
+    height: 450px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`
+export const InputArea = styled.div<labelProps>`
+    position: relative;
+    margin: 30px 0;
+    width: 310px;
+    border-bottom: 2px solid ${props => props.hasError ? '#ff0000' : '#aec09e'};
 `
 
-export const Label = styled.label`
-    font-size: 20px;
 
-`
 
-export const InputValue = styled.input<labelProps>`
-    padding: 10px;
-    width: 300px;
-    border: 1px solid ${props => props.hasError ? 'red': 'green'};
-    margin-top: 10px;
-    border-radius: 5px;
+export const InputValue = styled.input`
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0 35px 0 5px;
 
-    &:focus {
-        outline: none;
+    &:focus ~ label {
+        top: -5px;
+        font-size:14px;
+        font-weight: bold;
+        color: #81a06c;
     }
+   
 `
+export const Label = styled.label<labelProps>`
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: #000;
+    font-size: 1em;
+    pointer-events: none;
+    transition: .5s;
+   
+
+    ${(props) =>
+        props.shrink === true &&
+        css`
+            top:-5px;
+            font-size:14px;
+            font-weight: bold;
+            color: #81a06c;
+        `}
+     
+`
+
 export const ErrorSpan = styled.span`
     color: #ff0000;
     font-size: 12px;
+    margin-top: -25px;
 `
 
 export const SubmitButton = styled.button`
