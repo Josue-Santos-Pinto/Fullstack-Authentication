@@ -24,6 +24,7 @@ import houseIMG from '../../assets/bg/house.jpg'
 import {useForm} from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver} from '@hookform/resolvers/zod'
+import { api } from '../../services/api'
 
 
 
@@ -52,8 +53,8 @@ function Authenticate (){
         resolver: zodResolver(createUserFormSchema)
     })
 
-    function createUser(data: any){
-        setOutput(JSON.stringify(data, null, 2))
+    async function createUser(data: CreateUserFormData ){
+         await api.login(data.email,data.password)
     }
 
     return (
@@ -71,7 +72,7 @@ function Authenticate (){
                 <MainFormArea>
                     <MainFormTitle>Bem vindo</MainFormTitle>
                     <MainFormSubTitle>Faça login para acessar nosso site</MainFormSubTitle>
-                    <MainForm onSubmit={handleSubmit(createUser)} action=''>
+                    <MainForm onSubmit={handleSubmit(createUser)} action='' method='post'>
                         <InputArea hasError={errors.email?.message ? true : false}>
                             <InputValue 
                                 type='text' 
