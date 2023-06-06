@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import cors from 'cors'
 import apiRoutes from './routes/apiRoutes'
+import passport from 'passport'
 
 dotenv.config()
 
@@ -13,6 +14,9 @@ server.use(cors())
 
 server.use(express.static(path.join(__dirname, '../public')));
 server.use(express.urlencoded({ extended: true }));
+
+server.use(passport.initialize())
+
 
 server.use(apiRoutes)
 

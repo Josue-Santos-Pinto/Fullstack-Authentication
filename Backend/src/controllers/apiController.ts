@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { User } from "../models/User";
-import JWT from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
+import { generateToken } from "../config/passport";
 
 dotenv.config()
 
@@ -12,7 +13,8 @@ export const ping = (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
     
     if(req.body.email && req.body.password){
-
+        const hashPassword = await bcrypt.hash(req.body.password,10)
+        req.body.password = hashPassword
         let {email, password} = req.body
 
        let hasUser = await User.findOne({where:{email}})
@@ -20,7 +22,7 @@ export const register = async (req: Request, res: Response) => {
        if(!hasUser){
          
             let newUser = await User.create({email,password})
-            let token = JWT.sign({id: newUser.id, email: newUser.email},process.env.JWT_SECRET_KEY as string, {expiresIn: '2h'})
+            let token = generateToken({id: newUser.id})
             res.json({id: newUser.id, token})
 
             return;
@@ -38,20 +40,24 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
     
     if(req.body.email && req.body.password){
-
+        
         let {email, password} = req.body
 
-       let user = await User.findOne({where:{email, password}})
-
+       let user = await User.findOne({where:{email}})
        if(user){
-        let token = JWT.sign({id: user.id, email: user.email},process.env.JWT_SECRET_KEY as string, {expiresIn: '2h'})
-            res.json({status: true, user, token})
-
-            return;
+        try{
+            if(await bcrypt.compare(req.body.password, user.password)){
+                const token = generateToken({id: user.id,})
+                res.json({status: true, token})
+    
+                return;
+            } 
+        }
+        catch(err){
+            res.json({error: 'Email e/ou senha incorretos'})
+            return
+        }
            
-       } else {
-        res.json({error: 'Usuario já cadastrado'})
-        return
        }
     } 
         res.json({error: 'E-mail e/ou senha não enviados'})
