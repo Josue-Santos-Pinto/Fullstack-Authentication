@@ -1,10 +1,10 @@
-import Authenticate from "./pages/Authenticate"
+import MainRoutes from "./routes"
 
 
 function App() {
 
   return (
-    <Authenticate />
+    <MainRoutes />
   )
 }
 

@@ -1,16 +1,27 @@
 import styled, { css } from "styled-components";
-
+import { Link } from 'react-router-dom'
 type labelProps = {
     hasError?: boolean | null;
     shrink?: boolean
 }
 
-export const Container = styled.div`
+export const BgBody = styled.div`
     width: 100vw;
     height: 100vh;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6f9d53;
+`
+
+export const Container = styled.div`
+    width: 95vw;
+    height: 95vh;
+    display: flex;
     flex-direction : row;
     justify-content: center;
+    background-color: #fff;
+    border-radius: 20px;
 `
 export const FormArea = styled.div`
     display: flex;
@@ -27,12 +38,16 @@ export const HeaderForm = styled.div`
     width: 100%;
 `
 export const LogoArea = styled.div`
-    width: 150px;
+    width: 200px;
     height: 80px;
-    background-color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 export const Logo = styled.img`
-    
+    width: 100%;
+    height: 100%;
+    resize-mode: cover;
 `
 export const NewUserArea = styled.div`
     display: flex;
@@ -48,7 +63,7 @@ export const NewUserText = styled.h2`
     color: #aaacab;
     font-weight: 600;
 `
-export const NewUserButton = styled.div`
+export const NewUserButton = styled(Link)`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,6 +75,7 @@ export const NewUserButton = styled.div`
     border-radius: 20px;
     padding: 0 10px;
     margin-left: 10px;
+    text-decoration: none;
 `
 export const MainFormArea = styled.div`
     display: flex;

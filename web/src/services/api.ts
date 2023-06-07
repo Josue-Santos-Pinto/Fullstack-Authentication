@@ -5,8 +5,7 @@ const baseURL = 'http://192.168.1.101:3000'
 
 
 export const api = {
-    register: async (email: string,password: string) => {
-        console.log(email)
+    register: async (name: string, email: string,password: string) => {
         try {
             const config = {
               headers: {
@@ -15,18 +14,18 @@ export const api = {
             };
         
             const data = {
+              name,
               email,
               password
             };
         
             const response = await axios.post(`${baseURL}/register`, qs.stringify(data), config);
-            console.log(response.data); // A resposta da API
+            return response.data // A resposta da API
           } catch (error) {
             console.error(error);
           }
     },
     login: async (email: string,password: string) => {
-        console.log(email)
         try {
             const config = {
               headers: {
@@ -40,7 +39,7 @@ export const api = {
             };
         
             const response = await axios.post(`${baseURL}/login`, qs.stringify(data), config);
-            console.log(response.data); // A resposta da API
+            return response.data // A resposta da API
           } catch (error) {
             console.error(error);
           }

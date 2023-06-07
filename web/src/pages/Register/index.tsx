@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {
+    BgBody,
     Container,
     FormArea,
     HeaderForm, 
@@ -21,15 +22,26 @@ import {
     ErrorSpan
 } from './styles'
 import houseIMG from '../../assets/bg/house.jpg'
+import logo from '../../assets/logo.png'
+
 import {useForm} from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver} from '@hookform/resolvers/zod'
-import { api } from '../../services/api'
 
+import { api } from '../../services/api'
+import { useNavigate } from 'react-router-dom'
 
 
 
 const createUserFormSchema = z.object({
+    name: 
+        z.string()
+        .nonempty('O nome é obrigatório')
+        .transform(name => {
+            return name.trim().split(' ').map(word => {
+                return word[0].toLocaleUpperCase().concat(word.substring(1))
+            }).join(' ')
+        }),
     email: 
         z.string()
         .nonempty('O email é obrigatório')
@@ -43,36 +55,57 @@ const createUserFormSchema = z.object({
 
 type CreateUserFormData = z.infer<typeof createUserFormSchema>
 
-function Authenticate (){
+function Register (){
 
-    const[output, setOutput] = useState('')
+    
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    const navigate = useNavigate()
 
     const { register, handleSubmit, formState: { errors } } = useForm<CreateUserFormData>({
         resolver: zodResolver(createUserFormSchema)
     })
 
     async function createUser(data: CreateUserFormData ){
-         await api.login(data.email,data.password)
+        const res = await api.register(data.name,data.email,data.password)
+        if(!res.error){
+            alert('Usuário criado com sucesso!')
+            navigate('/')
+        } else {
+            alert(res.error)
+        }
     }
 
     return (
+        <BgBody>
         <Container>
             <FormArea>
                 <HeaderForm>
                     <LogoArea>
-                        <Logo />
+                        <Logo src={logo} />
                     </LogoArea>
                     <NewUserArea>
-                        <NewUserText>Não possui uma conta?</NewUserText>
-                        <NewUserButton>Criar Conta</NewUserButton>
+                        <NewUserText>Já possui uma conta?</NewUserText>
+                        <NewUserButton to='/'>Fazer Login</NewUserButton>
                     </NewUserArea>
                 </HeaderForm>
                 <MainFormArea>
                     <MainFormTitle>Bem vindo</MainFormTitle>
-                    <MainFormSubTitle>Faça login para acessar nosso site</MainFormSubTitle>
+                    <MainFormSubTitle>Crie uma conta para acessar nosso site</MainFormSubTitle>
                     <MainForm onSubmit={handleSubmit(createUser)} action='' method='post'>
+                        <InputArea hasError={errors.name?.message ? true : false}>
+                            <InputValue 
+                                type='text' 
+                                {...register('name')} 
+                                value={name} 
+                                onChange={(e)=>setName(e.target.value)}  
+                                 
+                            />
+                            <Label shrink={name !== ''}>Nome</Label>
+                        </InputArea>
+                        {errors.name && <ErrorSpan>{errors.name.message}</ErrorSpan>}
                         <InputArea hasError={errors.email?.message ? true : false}>
                             <InputValue 
                                 type='text' 
@@ -97,17 +130,17 @@ function Authenticate (){
                         </InputArea>
                         {errors.password && <ErrorSpan>{errors.password.message}</ErrorSpan>}
                             
-                        <SubmitButton type='submit'>Login</SubmitButton>
+                        <SubmitButton type='submit'>Cadastrar-se</SubmitButton>
                     </MainForm>
-                    <pre>{output}</pre>
                 </MainFormArea>
             </FormArea>
             <ImageArea>
                 <Image src={houseIMG}  />
             </ImageArea>
         </Container>
+        </BgBody>
     )
 }
 
 
-export default Authenticate
+export default Register

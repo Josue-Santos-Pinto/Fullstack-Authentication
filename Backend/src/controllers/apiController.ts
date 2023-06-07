@@ -12,16 +12,16 @@ export const ping = (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
     
-    if(req.body.email && req.body.password){
+    if( req.body.name && req.body.email && req.body.password){
         const hashPassword = await bcrypt.hash(req.body.password,10)
         req.body.password = hashPassword
-        let {email, password} = req.body
+        let {name, email, password} = req.body
 
        let hasUser = await User.findOne({where:{email}})
 
        if(!hasUser){
          
-            let newUser = await User.create({email,password})
+            let newUser = await User.create({name, email,password})
             let token = generateToken({id: newUser.id})
             res.json({id: newUser.id, token})
 
