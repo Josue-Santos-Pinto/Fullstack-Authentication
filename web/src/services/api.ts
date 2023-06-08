@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from 'qs'
-const baseURL = 'http://192.168.1.101:3000'
+const baseURL = 'http://192.168.1.100:3000'
 
 
 
@@ -39,6 +39,7 @@ export const api = {
             };
         
             const response = await axios.post(`${baseURL}/login`, qs.stringify(data), config);
+            console.log(response.data)
             return response.data // A resposta da API
           } catch (error) {
             console.error(error);

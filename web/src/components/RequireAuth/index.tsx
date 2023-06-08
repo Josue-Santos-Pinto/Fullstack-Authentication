@@ -16,7 +16,7 @@ export const RequireAuth = ({children}: Props) => {
            if(isAuth){
             return children
         } else {
-            return <Navigate to='/' />
+            return <Navigate to='/login' replace />
         }
     
    

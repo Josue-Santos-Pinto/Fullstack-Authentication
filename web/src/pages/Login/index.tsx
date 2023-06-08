@@ -69,7 +69,7 @@ function Login (){
                     type: "SET_TOKEN",
                     payload: { token: res.token }
                 })
-                navigate('/users')   
+                navigate('/myaccount', {replace: true})  
             }
         } else {
             alert(res.error)
@@ -93,7 +93,7 @@ function Login (){
                     <MainFormTitle>Bem vindo</MainFormTitle>
                     <MainFormSubTitle>Faça login para acessar nosso site</MainFormSubTitle>
                     <MainForm onSubmit={handleSubmit(createUser)} action='' method='post'>
-                        <InputArea hasError={errors.email?.message ? true : false}>
+                        <InputArea error={errors.email?.message ? true : false}>
                             <InputValue 
                                 type='text' 
                                 {...register('email')} 
@@ -105,7 +105,7 @@ function Login (){
                         </InputArea>
                         {errors.email && <ErrorSpan>{errors.email.message}</ErrorSpan>}
 
-                        <InputArea hasError={errors.password?.message ? true : false}>
+                        <InputArea error={errors.password?.message ? true : false}>
                             <InputValue 
                                 type='password' 
                                 {...register('password')}  

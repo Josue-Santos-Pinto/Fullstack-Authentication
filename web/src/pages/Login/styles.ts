@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { Link } from 'react-router-dom'
 type labelProps = {
-    hasError?: boolean | null;
+    error?: boolean | null;
     shrink?: boolean
 }
 
@@ -107,7 +107,7 @@ export const InputArea = styled.div<labelProps>`
     position: relative;
     margin: 30px 0;
     width: 310px;
-    border-bottom: 2px solid ${props => props.hasError ? '#ff0000' : '#aec09e'};
+    border-bottom: 2px solid ${props => props.error ? '#ff0000' : '#aec09e'};
 `
 
 
