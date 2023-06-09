@@ -23,6 +23,5 @@ export const Menu = styled.aside`
 export const Body = styled.div`
     diplay: flex;
     flex: 1;
-    background-color: blue;
 `
 

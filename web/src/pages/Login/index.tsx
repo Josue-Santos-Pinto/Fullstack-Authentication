@@ -69,6 +69,10 @@ function Login (){
                     type: "SET_TOKEN",
                     payload: { token: res.token }
                 })
+                dispatch({
+                    type: "SET_ID",
+                    payload: { id: res.id }
+                })
                 navigate('/myaccount', {replace: true})  
             }
         } else {

@@ -4,6 +4,7 @@ import path from 'path'
 import cors from 'cors'
 import apiRoutes from './routes/apiRoutes'
 import passport from 'passport'
+import { MulterError } from 'multer'
 
 dotenv.config()
 
@@ -34,6 +35,12 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     if(err.message) {
         res.json({ error: err.message });
     } else {
+        res.json({ error: 'Ocorreu algum erro.' });
+    }
+    if(err instanceof MulterError){
+        res.json({error: err.code})
+    } else {
+        console.log(err)
         res.json({ error: 'Ocorreu algum erro.' });
     }
 }
